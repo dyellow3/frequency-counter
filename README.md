@@ -27,11 +27,13 @@ The goal of this project is to show the extreme difference in run times between 
 2. **Compile the Code:**
    ```bash
    ./build.sh
-Note: The build.sh file is using [clang](https://clang.llvm.org/) to compile, feel free to use the compiler of your choice.
+   ```
+   Note: The build.sh file is using [clang](https://clang.llvm.org/) to compile, feel free to use the compiler of your choice.
 
 3. **Run the Program:**
    ```bash
    ./frequency_counter your_input_file.txt
-There are three input files included in the repo: fiftyThousand, twentyThousand, oneHundredTwentyThousand
-The file names correspond to the lines in each of the files.
-Each file is text taken from the work of Shakespeare. The oneHundredTwentyThousand is the entirety of Shakespeare work.
+   ```
+   There are three input files included in the repo: fiftyThousand, twentyThousand, oneHundredTwentyThousand  
+   The file names correspond to the lines in each of the files.  
+   Each file is text taken from the work of Shakespeare. The oneHundredTwentyThousand is the entirety of Shakespeare work.  
