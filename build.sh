@@ -4,4 +4,4 @@ set -xe
 
 CFLAGS="-Wall -Wextra"
 
-clang $CFLAGS -o prog main.c
+clang $CFLAGS -o frequency_counter main.c
