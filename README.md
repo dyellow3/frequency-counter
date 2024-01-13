@@ -18,7 +18,6 @@ Feel free to play around with the Hash Function to see if you can get better run
 - Efficient word frequency counting.
 - Options to choose between naive, hash, or both solutions.
 - Detailed timing and collision statistics.
-- Supports dynamic limit on the most frequent words to display.
 
 ## How to Use
 
