@@ -4,80 +4,40 @@
 #include <string.h>
 #include <stdint.h>
 #include <time.h>
-// tokens need to include buffer size
+#include "mergeSort.h"
+
+/*
+The token structure, that is included in mergeSort.h
+Tokens will represent each word in the input file
+
 struct token {
-    char val[50];
-    int count;
+    char val[50]; // Max length of 50
+    int count; 
     int occupied;
 };
+*/
 
-
-void merge(struct token arr[], int l, int m, int r) {
-    int i, j, k;
-    int n1 = m - l + 1;
-    int n2 = r - m;
-
-    struct token L[n1], R[n2];
-
-    for(i = 0; i < n1; i++)
-        L[i] = arr[l+i];
-    for(j = 0; j < n2; j++)
-        R[j] = arr[m+1+j];
-
-    i=0;
-    j=0;
-
-    k=l;
-    while( i < n1 && j < n2 ) {
-        if(L[i].count > R[j].count) {
-            arr[k] = L[i];
-            i++;
-        }
-        else {
-            arr[k] = R[j];
-            j++;
-        }
-        k++;
-    }
-
-    while(i<n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-
-    while(j<n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
-    
-}
-void mergeSort(struct token arr[], int l, int r) {
-    if(l<r) {
-        int m = l + (r-l) / 2;
-        mergeSort(arr, l, m);
-        mergeSort(arr, m+1, r);
-        merge(arr, l, m, r);
-    }   
-}
-
-
-// naive solution, bad
+// Naive solution, bad
 void naiveSolution(struct token tokens[], FILE *fptr, char buffer[], int size, int *c) {
-    // linear scan vry bad
+    // linear scan through each word in the file
     while(fscanf(fptr, "%49s", buffer)==1) {
         int index = 0;
         bool flag = false;
+        // search through our current tokens and compare with current word in buffer
         for(int i = 0; i < size; i++) {
             if(strcmp(buffer, tokens[i].val)==0) {
                 flag = true;
                 index = i;
+                // stop the for loop if we find it
+                break;
             }
         }
+        
+        // if the word was in the array, increase count
         if(flag) {
             tokens[index].count++;
         }
+        // else we add it to our tokens array
         else {
             tokens[size].count = 1;
             strcpy(tokens[size].val,buffer);
@@ -88,19 +48,19 @@ void naiveSolution(struct token tokens[], FILE *fptr, char buffer[], int size, i
 }
 
 
-// hash solution, good
+// Hash solution, good
+// the hash function - returns a valid index given the word
 uint32_t hashFunction(char buffer[50], int i, int arraySize) {
     uint32_t result = 0;
-    
-    // exit when the buffer given is empty
-    // or if the array is size of 0
+    // exit if the buffer given is empty
+    // or if the array is of size 0
     int len = strlen(buffer);
     if (len == 0 || arraySize == 0) {
         fprintf(stderr, "Error: Division by zero\n");
         exit(EXIT_FAILURE);
     }
 
-    // for each character in the buffer, we add it to result
+    // for each character in the buffer , we add it to result
     for(int j = 0; j < len; j++) {
         result = (result+i)*33 + (uint32_t)buffer[j];
     }
@@ -108,22 +68,30 @@ uint32_t hashFunction(char buffer[50], int i, int arraySize) {
     // mod the result by the size of the array, ensures we stay in range
     return (result)%arraySize;
 }
-// we take the array of tokens, pointer to file, buffer to hold the current word, 
 void hashSolution(struct token tokens[], FILE *fptr, char buffer[], int size, int *c, int *collisionCount) {
+    // scan through each word in the file, store it in buffer
     while(fscanf(fptr, "%49s", buffer)==1) {
+        // i will be used in the case of collision, in which we will linear probe
+        // that is, keep iterating till we find an open slot in the array 
         int i = 0;
         uint32_t result = hashFunction(buffer, i, size);
+
         // collision case 
-        while(strcmp(tokens[result].val,buffer)!=0 && tokens[result].occupied == 1) {
+        while(strcmp(tokens[result].val, buffer)!=0 && tokens[result].occupied == 1) {
+            // increment i, linear probe to find new available slot
             i++;
             (*collisionCount)++;
+            // get a new result using our incremented i
             result = hashFunction(buffer, i, size);
         }
+
+        // add the current word to our array if its not in already
         if(tokens[result].occupied == 0) {
             strcpy(tokens[result].val, buffer);
             tokens[result].occupied = 1;
             tokens[result].count++;
         }
+        // else increment the count
         else {
             tokens[result].count++;
         }
@@ -152,7 +120,7 @@ int main(int argc, char **argv)
 
     if(limit == -1) { limit = 10; }  
     
-    // buffer will hold the current token
+    // buffer will hold the current token (word)
     char buffer[50];
     // array to hold all the tokens (token value, token count, token occupied status)
     // need to consider a way to set the size of array dynamically
@@ -214,9 +182,6 @@ int main(int argc, char **argv)
        printf("   %d, %s\n", tokens[i].count, tokens[i].val);
     }
 
-    
     fclose(fptr);
-    
-
     return 0;
 }
