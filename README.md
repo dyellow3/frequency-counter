@@ -35,6 +35,6 @@ Feel free to play around with the Hash Function to see if you can get better run
    ```bash
    ./frequency_counter your_input_file.txt
    ```
-   There are three input files included in the repo: fiftyThousand, twentyThousand, oneHundredTwentyThousand.
+   There are three input files included in the samples directory: fiftyThousand, twentyThousand, oneHundredTwentyThousand.
    The file names correspond to the lines in each of the files.  
    Each file is text taken from the work of Shakespeare. The oneHundredTwentyThousand is the entirety of Shakespeare work.  
